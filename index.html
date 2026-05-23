@@ -554,9 +554,10 @@
       <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
         <span class="drop-icon">🎵</span>
         <div class="drop-title">Arrastra tu audio aquí</div>
-        <div class="drop-sub">o haz click para seleccionar · MP3, WAV, OGG, FLAC, AAC, M4A</div>
+        <div class="drop-sub">o haz click para seleccionar</div>
+        <div class="drop-sub" style="margin-top:5px; color:#3a4060;">MP3 · WAV · FLAC · AAC · M4A · OGG · OPUS · AIFF · WMA · CAF · MP4</div>
       </div>
-      <input type="file" id="fileInput" accept="audio/*" />
+      <input type="file" id="fileInput" accept="audio/*,.flac,.aif,.aiff,.opus,.wma,.caf,.mp4,.m4a,.m4b,.ogg,.oga,.wav,.mp3,.aac" />
 
       <div class="file-info" id="fileInfo">
         <span class="file-emoji">🎶</span>
@@ -821,7 +822,16 @@
     e.preventDefault();
     dropZone.classList.remove('drag-over');
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('audio/')) loadAudioFile(file);
+    if (!file) return;
+    const audioExts = /\.(mp3|wav|flac|aac|m4a|m4b|ogg|oga|opus|aiff?|wma|caf|mp4|webm)$/i;
+    const isAudio = file.type.startsWith('audio/') || file.type === 'video/mp4' || audioExts.test(file.name);
+    if (isAudio) {
+      loadAudioFile(file);
+    } else {
+      dropZone.classList.add('drag-over');
+      setTimeout(() => dropZone.classList.remove('drag-over'), 600);
+      alert('⚠️ Formato no reconocido: ' + (file.type || file.name) + '\nPrueba con MP3, WAV, FLAC, AAC, M4A, OGG, OPUS, AIFF.');
+    }
   });
 
   fileInput.addEventListener('change', (e) => {
@@ -846,7 +856,7 @@
         document.getElementById('maxFreqLabel').textContent =
           `${(audioBuffer.sampleRate / 2000).toFixed(0)} kHz`;
       } catch (err) {
-        alert('⚠️ No se pudo decodificar el archivo de audio.');
+        alert('⚠️ No se pudo decodificar el archivo.\n\nEste formato puede no ser compatible con tu navegador.\nPrueba con Chrome/Edge para mejor soporte de FLAC, M4A, AAC y AIFF.');
         removeFile();
       }
     };
