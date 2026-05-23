@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEOW ESPECTOGRAMA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #0f0f1a;
+      --bg3: #13131f;
+      --card: #111120;
+      --border: #1e1e35;
+      --accent: #00ffe5;
+      --accent2: #ff6bff;
+      --accent3: #ffe600;
+      --text: #c8d0e8;
+      --text-dim: #5a6080;
+      --glow: 0 0 12px #00ffe599, 0 0 30px #00ffe533;
+      --glow2: 0 0 12px #ff6bff99, 0 0 30px #ff6bff33;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,229,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,229,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 60% 20%, #0d0d2a 0%, transparent 60%),
+                  radial-gradient(ellipse at 20% 80%, #0a001a 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 960px;
+      padding: 0 16px 60px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 40px 0 28px;
+    }
+
+    .logo-cat {
+      font-size: 3rem;
+      display: block;
+      animation: floatCat 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px #00ffe5aa);
+    }
+
+    @keyframes floatCat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .logo-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-shadow: var(--glow);
+      margin-top: 8px;
+      text-transform: uppercase;
+    }
+
+    .logo-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.25em;
+      margin-top: 4px;
+    }
+
+    .logo-sub span {
+      color: var(--accent);
+      opacity: 0.7;
+    }
+
+    .info-bar {
+      background: #0d0d1e;
+      border: 1px solid #1a1a30;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin: 16px 0 28px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      text-align: center;
+    }
+    .info-bar strong { color: var(--accent); }
+
+    /* ── MODE TABS ── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tab-btn.active {
+      background: #00ffe510;
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: var(--glow);
+    }
+    .tab-btn.active.pink {
+      background: #ff6bff10;
+      border-color: var(--accent2);
+      color: var(--accent2);
+      box-shadow: var(--glow2);
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.5;
+    }
+
+    /* ── DROP ZONE ── */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #0c0c1a;
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: #00ffe508;
+      box-shadow: inset 0 0 20px #00ffe508;
+    }
+
+    .drop-icon { font-size: 2.4rem; display: block; margin-bottom: 10px; }
+
+    .drop-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .drop-sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    #fileInput { display: none; }
+
+    /* ── FILE INFO ── */
+    .file-info {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: #0c0c1a;
+      border: 1px solid #1a1a30;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 14px;
+    }
+    .file-info.show { display: flex; }
+    .file-emoji { font-size: 1.6rem; }
+    .file-details { flex: 1; min-width: 0; }
+    .file-name {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-meta { font-size: 0.72rem; color: var(--text-dim); margin-top: 2px; }
+    .file-remove {
+      background: none;
+      border: 1px solid #2a2a40;
+      color: var(--text-dim);
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .file-remove:hover { border-color: #ff4466; color: #ff4466; }
+
+    /* ── CONTROLS ── */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .ctrl-group label {
+      display: block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+      background: #0c0c1a;
+      border: 1px solid #1e1e35;
+      color: var(--text);
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      padding: 8px 10px;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    select:focus, select:hover { border-color: var(--accent); }
+    select option { background: #111120; }
+
+    input[type="range"] {
+      padding: 0;
+      height: 6px;
+      border-radius: 3px;
+      background: #1a1a30;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      cursor: pointer;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .range-val {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* ── MIC SOURCE CONTROLS ── */
+    .mic-controls {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .mic-controls.show { display: flex; }
+
+    .mic-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      background: #0c0c1a;
+      border: 1px solid #1e1e35;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mic-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .mic-btn.active {
+      background: #ff6bff15;
+      border-color: var(--accent2);
+      color: var(--accent2);
+      box-shadow: var(--glow2);
+    }
+    .mic-pulse {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse 1s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── ACTION BTN ── */
+    .action-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00ffe520, #00ffe508);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .action-btn:hover {
+      background: linear-gradient(135deg, #00ffe535, #00ffe515);
+      box-shadow: var(--glow);
+    }
+    .action-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .action-btn.stop {
+      background: linear-gradient(135deg, #ff006620, #ff006608);
+      border-color: #ff0066;
+      color: #ff0066;
+    }
+    .action-btn.stop:hover {
+      background: linear-gradient(135deg, #ff006635, #ff006615);
+      box-shadow: 0 0 12px #ff006699;
+    }
+
+    /* ── CANVAS AREA ── */
+    .visualizer-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .viz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .viz-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+    }
+
+    .viz-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: background 0.3s;
+    }
+    .status-dot.live { background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 1s infinite; }
+
+    #spectrumCanvas {
+      display: block;
+      width: 100%;
+      background: #07070f;
+    }
+
+    #waveCanvas {
+      display: block;
+      width: 100%;
+      background: #07070f;
+      border-top: 1px solid #12122a;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item {
+      background: #0a0a14;
+      padding: 10px 14px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      color: var(--accent);
+      display: block;
+    }
+    .stat-val.pink { color: var(--accent2); }
+
+    .stat-label {
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── COLORMAP STRIP ── */
+    .colormap-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-top: 1px solid var(--border);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+    .colormap-bar {
+      flex: 1;
+      height: 8px;
+      border-radius: 4px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+    footer span { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .logo-title { font-size: 1.5rem; }
+      .controls-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      #spectrumCanvas { height: 200px !important; }
+      #waveCanvas { height: 80px !important; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <span class="logo-cat">😺</span>
+    <div class="logo-title">Meow Espectograma</div>
+    <div class="logo-sub">// <span>Spectrum Analyzer</span> · Audio Analysis Tool //</div>
+  </header>
+
+  <div class="info-bar">
+    <strong>🐱 WEB AUDIO API</strong> — Análisis de espectro 100% en tu navegador. Sin subir archivos. Soporta micrófono en tiempo real o archivos de audio.<br>
+    Compatible con Chrome / Edge / Firefox. Para mejor rendimiento usa <strong>Chrome</strong>.
+  </div>
+
+  <!-- SOURCE TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tabFile" onclick="switchMode('file')">🎵 ARCHIVO</button>
+    <button class="tab-btn" id="tabMic" onclick="switchMode('mic')">🎤 MICRÓFONO</button>
+  </div>
+
+  <!-- CONTROL CARD -->
+  <div class="card">
+
+    <!-- FILE MODE -->
+    <div id="fileMode">
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <span class="drop-icon">🎵</span>
+        <div class="drop-title">Arrastra tu audio aquí</div>
+        <div class="drop-sub">o haz click para seleccionar · MP3, WAV, OGG, FLAC, AAC, M4A</div>
+      </div>
+      <input type="file" id="fileInput" accept="audio/*" />
+
+      <div class="file-info" id="fileInfo">
+        <span class="file-emoji">🎶</span>
+        <div class="file-details">
+          <div class="file-name" id="fileName">—</div>
+          <div class="file-meta" id="fileMeta">—</div>
+        </div>
+        <button class="file-remove" onclick="removeFile()" title="Quitar">✕</button>
+      </div>
+    </div>
+
+    <!-- MIC MODE -->
+    <div id="micMode" class="mic-controls">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()">
+        🎤 INICIAR MICRÓFONO
+      </button>
+    </div>
+
+    <!-- SHARED CONTROLS -->
+    <div class="controls-grid" style="margin-top:18px;">
+      <div class="ctrl-group">
+        <label>⚡ Tipo de Visualización</label>
+        <select id="vizType" onchange="updateVizType()">
+          <option value="bars">▐ Barras de Frecuencia</option>
+          <option value="line">〰 Línea de Espectro</option>
+          <option value="mirror">⬡ Espejo Simétrico</option>
+          <option value="filled">▲ Área Rellena</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>🎨 Mapa de Color</label>
+        <select id="colorMap" onchange="updateColors()">
+          <option value="cyan">Cian Neón</option>
+          <option value="pink">Rosa Neón</option>
+          <option value="rainbow">Arcoíris</option>
+          <option value="heat">Calor</option>
+          <option value="matrix">Matrix Verde</option>
+          <option value="gold">Dorado</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>🔊 Sensibilidad</label>
+        <div class="range-row">
+          <input type="range" id="sensitivity" min="1" max="5" step="0.1" value="2.5" oninput="updateSensitivity(this.value)" />
+          <span class="range-val" id="sensVal">2.5</span>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <label>🌊 Suavizado</label>
+        <div class="range-row">
+          <input type="range" id="smoothing" min="0" max="0.95" step="0.05" value="0.7" oninput="updateSmoothing(this.value)" />
+          <span class="range-val" id="smoothVal">0.70</span>
+        </div>
+      </div>
+      <div class="ctrl-group">
+        <label>📊 Tamaño FFT</label>
+        <select id="fftSize" onchange="updateFFT()">
+          <option value="512">512 — Rápido</option>
+          <option value="1024">1024 — Balanceado</option>
+          <option value="2048" selected>2048 — Estándar</option>
+          <option value="4096">4096 — Alta resolución</option>
+          <option value="8192">8192 — Máx resolución</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>📏 Escala de Freq.</label>
+        <select id="freqScale">
+          <option value="linear">Lineal</option>
+          <option value="log" selected>Logarítmica</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ACTION BUTTON -->
+    <button class="action-btn" id="actionBtn" disabled onclick="handleAction()">
+      ⚡ ANALIZAR ESPECTRO
+    </button>
+  </div>
+
+  <!-- VISUALIZER -->
+  <div class="visualizer-card">
+    <div class="viz-header">
+      <div class="viz-title">😸 ESPECTRO DE FRECUENCIAS</div>
+      <div class="viz-status">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusTxt">EN ESPERA</span>
+      </div>
+    </div>
+
+    <canvas id="spectrumCanvas" height="300"></canvas>
+    <canvas id="waveCanvas" height="100"></canvas>
+
+    <div class="colormap-strip">
+      <span>0 Hz</span>
+      <canvas class="colormap-bar" id="colormapBar" height="8"></canvas>
+      <span id="maxFreqLabel">22 kHz</span>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-val" id="statPeak">— dB</span>
+        <div class="stat-label">Pico</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val pink" id="statDom">— Hz</span>
+        <div class="stat-label">Freq. Dominante</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val" id="statRMS">—</span>
+        <div class="stat-label">Nivel RMS</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val pink" id="statBand">—</span>
+        <div class="stat-label">Banda Activa</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Meow Espectograma | Powered by Web Audio API | 100% Local 🐱 Sin subidas
+</footer>
+
+<script>
+  // ── STATE ──
+  let audioCtx = null;
+  let analyser = null;
+  let source = null;
+  let animFrame = null;
+  let isPlaying = false;
+  let isMicActive = false;
+  let currentMode = 'file';
+  let audioBuffer = null;
+  let sensitivity = 2.5;
+  let vizType = 'bars';
+  let colorPalette = getColorPalette('cyan');
+
+  const specCanvas = document.getElementById('spectrumCanvas');
+  const specCtx = specCanvas.getContext('2d');
+  const waveCanvas = document.getElementById('waveCanvas');
+  const waveCtx = waveCanvas.getContext('2d');
+  const colormapBar = document.getElementById('colormapBar');
+
+  // ── RESIZE CANVAS ──
+  function resizeCanvases() {
+    const w = specCanvas.parentElement.clientWidth;
+    specCanvas.width = w;
+    waveCanvas.width = w;
+    colormapBar.width = colormapBar.parentElement.clientWidth - 120;
+    drawIdleState();
+    drawColormap();
+  }
+
+  window.addEventListener('resize', resizeCanvases);
+  window.addEventListener('load', () => { resizeCanvases(); drawColormap(); });
+
+  // ── COLOR PALETTES ──
+  function getColorPalette(name) {
+    const palettes = {
+      cyan:    { main: '#00ffe5', glow: '#00bfaa', bg: '#00ffe5', stops: ['#001aff','#00ffe5'] },
+      pink:    { main: '#ff6bff', glow: '#cc00cc', bg: '#ff6bff', stops: ['#ff006b','#ff6bff'] },
+      rainbow: { main: '#ff6bff', glow: '#ffff00', bg: null, stops: null },
+      heat:    { main: '#ff4400', glow: '#ff0000', bg: null, stops: ['#000080','#0000ff','#00ff00','#ffff00','#ff8800','#ff0000'] },
+      matrix:  { main: '#00ff41', glow: '#00cc33', bg: '#00ff41', stops: ['#001100','#00ff41'] },
+      gold:    { main: '#ffe600', glow: '#ff8800', bg: '#ffe600', stops: ['#8b4513','#ffe600'] },
+    };
+    return palettes[name] || palettes.cyan;
+  }
+
+  function getBarColor(i, total, amplitude) {
+    const map = document.getElementById('colorMap').value;
+    const t = i / total;
+    const a = amplitude;
+
+    if (map === 'rainbow') {
+      const h = Math.round(t * 270);
+      return `hsl(${h}, 100%, ${40 + a * 30}%)`;
+    }
+    if (map === 'heat') {
+      const h = Math.round((1 - t) * 240);
+      return `hsl(${h}, 100%, ${30 + a * 40}%)`;
+    }
+    if (map === 'pink') {
+      const r = Math.round(180 + t * 75);
+      const g = Math.round(30 + t * 77);
+      const b = 255;
+      return `rgb(${r},${g},${b})`;
+    }
+    if (map === 'matrix') {
+      return `rgba(0, ${Math.round(80 + amplitude * 175)}, 65, 0.95)`;
+    }
+    if (map === 'gold') {
+      const r = Math.round(180 + amplitude * 75);
+      const g = Math.round(130 + amplitude * 100);
+      const b = 0;
+      return `rgb(${r},${g},${b})`;
+    }
+    // cyan default
+    const r = 0;
+    const g = Math.round(200 + amplitude * 55);
+    const b = Math.round(200 + amplitude * 55);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function drawColormap() {
+    const w = colormapBar.width;
+    const h = colormapBar.height;
+    const ctx = colormapBar.getContext('2d');
+    const total = w;
+    for (let i = 0; i < total; i++) {
+      ctx.fillStyle = getBarColor(i, total, i / total);
+      ctx.fillRect(i, 0, 1, h);
+    }
+  }
+
+  function updateColors() {
+    colorPalette = getColorPalette(document.getElementById('colorMap').value);
+    drawColormap();
+  }
+
+  // ── DRAW IDLE ──
+  function drawIdleState() {
+    const w = specCanvas.width;
+    const h = specCanvas.height;
+    specCtx.clearRect(0, 0, w, h);
+    specCtx.fillStyle = '#07070f';
+    specCtx.fillRect(0, 0, w, h);
+
+    // draw grid
+    specCtx.strokeStyle = 'rgba(0,255,229,0.06)';
+    specCtx.lineWidth = 1;
+    for (let x = 0; x < w; x += w / 8) {
+      specCtx.beginPath(); specCtx.moveTo(x, 0); specCtx.lineTo(x, h); specCtx.stroke();
+    }
+    for (let y = 0; y < h; y += h / 4) {
+      specCtx.beginPath(); specCtx.moveTo(0, y); specCtx.lineTo(w, y); specCtx.stroke();
+    }
+
+    // Cat ears silhouette
+    specCtx.fillStyle = 'rgba(0,255,229,0.04)';
+    specCtx.font = '5rem serif';
+    specCtx.textAlign = 'center';
+    specCtx.fillText('😼', w / 2, h / 2 + 25);
+
+    specCtx.fillStyle = 'rgba(0,255,229,0.3)';
+    specCtx.font = '0.75rem "Share Tech Mono"';
+    specCtx.fillText('— CARGA UN ARCHIVO O ACTIVA EL MICRÓFONO —', w / 2, h / 2 + 55);
+
+    waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+    waveCtx.fillStyle = '#07070f';
+    waveCtx.fillRect(0, 0, waveCanvas.width, waveCanvas.height);
+  }
+
+  // ── FILE HANDLING ──
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('audio/')) loadAudioFile(file);
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) loadAudioFile(e.target.files[0]);
+  });
+
+  function loadAudioFile(file) {
+    stopAnalysis();
+    const info = document.getElementById('fileInfo');
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileMeta').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB · ${file.type || 'audio'}`;
+    info.classList.add('show');
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      try {
+        audioBuffer = await audioCtx.decodeAudioData(e.target.result);
+        document.getElementById('actionBtn').disabled = false;
+        document.getElementById('fileMeta').textContent +=
+          ` · ${audioBuffer.duration.toFixed(1)}s · ${audioBuffer.sampleRate} Hz`;
+        document.getElementById('maxFreqLabel').textContent =
+          `${(audioBuffer.sampleRate / 2000).toFixed(0)} kHz`;
+      } catch (err) {
+        alert('⚠️ No se pudo decodificar el archivo de audio.');
+        removeFile();
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function removeFile() {
+    stopAnalysis();
+    audioBuffer = null;
+    fileInput.value = '';
+    document.getElementById('fileInfo').classList.remove('show');
+    document.getElementById('actionBtn').disabled = true;
+    drawIdleState();
+  }
+
+  // ── MODE SWITCH ──
+  function switchMode(mode) {
+    stopAnalysis();
+    currentMode = mode;
+    document.getElementById('tabFile').classList.toggle('active', mode === 'file');
+    document.getElementById('tabMic').classList.toggle('active', mode === 'mic');
+    document.getElementById('tabMic').classList.toggle('pink', mode === 'mic');
+    document.getElementById('fileMode').style.display = mode === 'file' ? '' : 'none';
+    document.getElementById('micMode').classList.toggle('show', mode === 'mic');
+
+    if (mode === 'mic') {
+      document.getElementById('actionBtn').style.display = 'none';
+    } else {
+      document.getElementById('actionBtn').style.display = '';
+      document.getElementById('actionBtn').disabled = !audioBuffer;
+    }
+    drawIdleState();
+  }
+
+  // ── MIC ──
+  async function toggleMic() {
+    if (isMicActive) {
+      stopAnalysis();
+      return;
+    }
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      if (analyser) analyser.disconnect();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = parseInt(document.getElementById('fftSize').value);
+      analyser.smoothingTimeConstant = parseFloat(document.getElementById('smoothing').value);
+
+      source = audioCtx.createMediaStreamSource(stream);
+      source.connect(analyser);
+
+      isMicActive = true;
+      isPlaying = true;
+      const btn = document.getElementById('micBtn');
+      btn.classList.add('active');
+      btn.innerHTML = '<div class="mic-pulse"></div> 🎤 DETENER MICRÓFONO';
+
+      setStatus(true, 'MICRÓFONO ACTIVO');
+      startAnimation();
+    } catch (e) {
+      alert('⚠️ No se pudo acceder al micrófono. Verifica permisos.');
+    }
+  }
+
+  // ── FILE PLAYBACK ──
+  function handleAction() {
+    if (isPlaying) { stopAnalysis(); return; }
+    playFile();
+  }
+
+  function playFile() {
+    if (!audioBuffer) return;
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    if (analyser) analyser.disconnect();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = parseInt(document.getElementById('fftSize').value);
+    analyser.smoothingTimeConstant = parseFloat(document.getElementById('smoothing').value);
+
+    if (source) { try { source.disconnect(); } catch(e){} }
+    source = audioCtx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    source.start(0);
+    source.onended = () => { if (isPlaying) stopAnalysis(); };
+
+    isPlaying = true;
+    const btn = document.getElementById('actionBtn');
+    btn.textContent = '⏹ DETENER ANÁLISIS';
+    btn.classList.add('stop');
+    setStatus(true, 'REPRODUCIENDO');
+    startAnimation();
+  }
+
+  function stopAnalysis() {
+    if (source) {
+      try { source.stop(); } catch(e){}
+      try { source.disconnect(); } catch(e){}
+    }
+    if (isMicActive) {
+      const btn = document.getElementById('micBtn');
+      btn.classList.remove('active');
+      btn.innerHTML = '🎤 INICIAR MICRÓFONO';
+      isMicActive = false;
+    }
+    isPlaying = false;
+    cancelAnimationFrame(animFrame);
+
+    const btn = document.getElementById('actionBtn');
+    btn.textContent = '⚡ ANALIZAR ESPECTRO';
+    btn.classList.remove('stop');
+    if (audioBuffer) btn.disabled = false;
+
+    setStatus(false, 'EN ESPERA');
+    resetStats();
+    drawIdleState();
+  }
+
+  function setStatus(live, txt) {
+    document.getElementById('statusDot').className = 'status-dot' + (live ? ' live' : '');
+    document.getElementById('statusTxt').textContent = txt;
+  }
+
+  function resetStats() {
+    ['statPeak','statDom','statRMS','statBand'].forEach(id => {
+      document.getElementById(id).textContent = '—';
+    });
+    document.getElementById('statPeak').textContent = '— dB';
+  }
+
+  // ── ANIMATION LOOP ──
+  function startAnimation() {
+    function draw() {
+      if (!isPlaying && !isMicActive) return;
+      animFrame = requestAnimationFrame(draw);
+
+      const bufLen = analyser.frequencyBinCount;
+      const freqData = new Uint8Array(bufLen);
+      const timeData = new Uint8Array(bufLen);
+      analyser.getByteFrequencyData(freqData);
+      analyser.getByteTimeDomainData(timeData);
+
+      drawSpectrum(freqData, bufLen);
+      drawWaveform(timeData, bufLen);
+      updateStats(freqData, bufLen);
+    }
+    draw();
+  }
+
+  function drawSpectrum(data, bufLen) {
+    const w = specCanvas.width;
+    const h = specCanvas.height;
+    const type = document.getElementById('vizType').value;
+    const scale = document.getElementById('freqScale').value;
+
+    // Fade trail
+    specCtx.fillStyle = 'rgba(7,7,15,0.35)';
+    specCtx.fillRect(0, 0, w, h);
+
+    // Grid
+    specCtx.strokeStyle = 'rgba(0,255,229,0.04)';
+    specCtx.lineWidth = 1;
+    for (let y = h; y > 0; y -= h / 4) {
+      specCtx.beginPath(); specCtx.moveTo(0, y); specCtx.lineTo(w, y); specCtx.stroke();
+    }
+
+    // dB labels
+    specCtx.fillStyle = 'rgba(0,255,229,0.25)';
+    specCtx.font = '9px "Share Tech Mono"';
+    specCtx.textAlign = 'right';
+    ['0', '-24', '-48', '-72'].forEach((db, i) => {
+      const y = (h / 4) * i + 10;
+      specCtx.fillText(db + ' dB', w - 4, y);
+    });
+
+    const barW = type === 'bars' ? Math.max(1, w / bufLen * 1.8) : 1;
+
+    if (type === 'line' || type === 'filled') {
+      specCtx.beginPath();
+      let first = true;
+      for (let i = 0; i < bufLen; i++) {
+        const x = scaleX(i, bufLen, w, scale);
+        const v = (data[i] / 255) * sensitivity;
+        const y = h - Math.min(v, 1) * h;
+        if (first) { specCtx.moveTo(x, y); first = false; }
+        else specCtx.lineTo(x, y);
+      }
+      if (type === 'filled') {
+        specCtx.lineTo(w, h); specCtx.lineTo(0, h);
+        specCtx.closePath();
+        const grad = specCtx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, colorPalette.main + 'cc');
+        grad.addColorStop(1, colorPalette.main + '11');
+        specCtx.fillStyle = grad;
+        specCtx.fill();
+      }
+      specCtx.strokeStyle = colorPalette.main;
+      specCtx.lineWidth = 2;
+      specCtx.shadowBlur = 8;
+      specCtx.shadowColor = colorPalette.main;
+      specCtx.stroke();
+      specCtx.shadowBlur = 0;
+
+    } else if (type === 'mirror') {
+      const midY = h / 2;
+      for (let i = 0; i < bufLen; i++) {
+        const x = scaleX(i, bufLen, w, scale);
+        const v = Math.min((data[i] / 255) * sensitivity, 1);
+        const bh = v * midY;
+        const amp = data[i] / 255;
+        specCtx.fillStyle = getBarColor(i, bufLen, amp);
+        specCtx.shadowBlur = bh > 5 ? 6 : 0;
+        specCtx.shadowColor = colorPalette.main;
+        specCtx.fillRect(x, midY - bh, barW, bh);
+        specCtx.fillRect(x, midY, barW, bh);
+      }
+      specCtx.shadowBlur = 0;
+
+    } else {
+      // bars
+      for (let i = 0; i < bufLen; i++) {
+        const x = scaleX(i, bufLen, w, scale);
+        const v = Math.min((data[i] / 255) * sensitivity, 1);
+        const bh = v * h;
+        if (bh < 1) continue;
+        const amp = data[i] / 255;
+        specCtx.fillStyle = getBarColor(i, bufLen, amp);
+        specCtx.shadowBlur = bh > 10 ? 8 : 0;
+        specCtx.shadowColor = colorPalette.main;
+        specCtx.fillRect(x, h - bh, barW, bh);
+      }
+      specCtx.shadowBlur = 0;
+    }
+
+    // Freq labels
+    specCtx.fillStyle = 'rgba(0,255,229,0.3)';
+    specCtx.font = '9px "Share Tech Mono"';
+    specCtx.textAlign = 'center';
+    const sampleRate = audioCtx ? audioCtx.sampleRate : 44100;
+    const freqs = [100,500,1000,2000,5000,10000,20000];
+    freqs.forEach(f => {
+      const idx = Math.round(f / (sampleRate / 2) * bufLen);
+      const x = scaleX(idx, bufLen, w, scale);
+      if (x > 20 && x < w - 10) {
+        specCtx.fillText(f >= 1000 ? (f/1000)+'k' : f, x, h - 4);
+        specCtx.fillStyle = 'rgba(0,255,229,0.1)';
+        specCtx.fillRect(x, 0, 1, h - 14);
+        specCtx.fillStyle = 'rgba(0,255,229,0.3)';
+      }
+    });
+  }
+
+  function scaleX(i, bufLen, w, scale) {
+    if (scale === 'log') {
+      const logMin = Math.log10(1);
+      const logMax = Math.log10(bufLen);
+      return (Math.log10(i + 1) - logMin) / (logMax - logMin) * w;
+    }
+    return (i / bufLen) * w;
+  }
+
+  function drawWaveform(data, bufLen) {
+    const w = waveCanvas.width;
+    const h = waveCanvas.height;
+    waveCtx.fillStyle = 'rgba(7,7,15,0.5)';
+    waveCtx.fillRect(0, 0, w, h);
+
+    // center line
+    waveCtx.strokeStyle = 'rgba(0,255,229,0.08)';
+    waveCtx.lineWidth = 1;
+    waveCtx.beginPath(); waveCtx.moveTo(0, h/2); waveCtx.lineTo(w, h/2); waveCtx.stroke();
+
+    waveCtx.beginPath();
+    waveCtx.strokeStyle = colorPalette.main;
+    waveCtx.lineWidth = 1.5;
+    waveCtx.shadowBlur = 5;
+    waveCtx.shadowColor = colorPalette.main;
+    const step = bufLen / w;
+    for (let x = 0; x < w; x++) {
+      const i = Math.floor(x * step);
+      const v = (data[i] / 128) - 1;
+      const y = (v * h / 2) + h / 2;
+      x === 0 ? waveCtx.moveTo(x, y) : waveCtx.lineTo(x, y);
+    }
+    waveCtx.stroke();
+    waveCtx.shadowBlur = 0;
+  }
+
+  function updateStats(data, bufLen) {
+    let peak = 0, rmsSum = 0, domIdx = 0, domVal = 0;
+    let activeBands = 0;
+    for (let i = 0; i < bufLen; i++) {
+      const v = data[i];
+      if (v > peak) peak = v;
+      if (v > domVal) { domVal = v; domIdx = i; }
+      rmsSum += v * v;
+      if (v > 20) activeBands++;
+    }
+    const rms = Math.sqrt(rmsSum / bufLen);
+    const sampleRate = audioCtx ? audioCtx.sampleRate : 44100;
+    const domFreq = Math.round(domIdx / bufLen * sampleRate / 2);
+    const peakDb = peak > 0 ? (20 * Math.log10(peak / 255)).toFixed(1) : '-∞';
+    const rmsLevel = (rms / 255 * 100).toFixed(1) + '%';
+    const bandLabel = domFreq < 300 ? 'Graves' : domFreq < 3000 ? 'Medios' : 'Agudos';
+
+    document.getElementById('statPeak').textContent = peakDb + ' dB';
+    document.getElementById('statDom').textContent = domFreq >= 1000 ? (domFreq/1000).toFixed(1) + ' kHz' : domFreq + ' Hz';
+    document.getElementById('statRMS').textContent = rmsLevel;
+    document.getElementById('statBand').textContent = bandLabel;
+  }
+
+  // ── SETTINGS UPDATE ──
+  function updateVizType() { vizType = document.getElementById('vizType').value; }
+  function updateSensitivity(v) {
+    sensitivity = parseFloat(v);
+    document.getElementById('sensVal').textContent = parseFloat(v).toFixed(1);
+  }
+  function updateSmoothing(v) {
+    if (analyser) analyser.smoothingTimeConstant = parseFloat(v);
+    document.getElementById('smoothVal').textContent = parseFloat(v).toFixed(2);
+  }
+  function updateFFT() {
+    if (analyser) analyser.fftSize = parseInt(document.getElementById('fftSize').value);
+  }
+</script>
+</body>
+</html>
